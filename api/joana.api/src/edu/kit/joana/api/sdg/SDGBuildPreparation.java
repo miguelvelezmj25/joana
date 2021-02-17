@@ -58,7 +58,7 @@ public final class SDGBuildPreparation {
 
 
 
-	public final static int DEFAULT_PRUNE_CG = 2;
+	public final static int DEFAULT_PRUNE_CG = 0;
 	public final static int DO_NOT_PRUNE_CG = SDGBuilder.DO_NOT_PRUNE;
 
 	public final static String STD_CLASS_PATH = "bin/";
