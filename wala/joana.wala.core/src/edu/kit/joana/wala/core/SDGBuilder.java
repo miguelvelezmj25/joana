@@ -117,6 +117,7 @@ public class SDGBuilder implements CallGraphFilter, SDGBuildArtifacts {
 			+ "sun\\/.*\n"
 			+ "apple\\/awt\\/.*\n"
 			+ "com\\/apple\\/.*\n"
+			+ "javax\\/.*\n"
 			+ "org\\/omg\\/.*\n";
 
 		// these classes are modeled without specific fields
