@@ -8,8 +8,11 @@
 package edu.kit.joana.ifc.sdg.graph.chopper;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import edu.kit.joana.ifc.sdg.graph.SDG;
+import edu.kit.joana.ifc.sdg.graph.SDGEdge;
 import edu.kit.joana.ifc.sdg.graph.SDGNode;
 import edu.kit.joana.ifc.sdg.graph.slicer.SummarySlicer;
 import edu.kit.joana.ifc.sdg.graph.slicer.SummarySlicerBackward;
@@ -49,15 +52,65 @@ public class FixedPointChopper extends Chopper {
      * Triggered by {@link Chopper#setGraph(SDG)}.
      */
     protected void onSetGraph() {
-    	if (forward == null) {
-    		forward = new SummarySlicerForward(sdg);
+        if (forward == null) {
+            Set<SDGEdge.Kind> edgesToOmit = new HashSet<>();
+            edgesToOmit.addAll(SDGEdge.Kind.threadEdges());
+            edgesToOmit.addAll(SDGEdge.Kind.controlFlowEdges());
 
-    	} else {
-    		forward.setGraph(sdg);
-    	}
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_UNCOND);
+//            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_COND); // Might need this dependence
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_EXPR);
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_CALL);
+            edgesToOmit.add(SDGEdge.Kind.JUMP_DEP);
+            edgesToOmit.add(SDGEdge.Kind.NTSCD);
+            edgesToOmit.add(SDGEdge.Kind.SYNCHRONIZATION);
+
+//            edgesToOmit.add(SDGEdge.Kind.DATA_DEP);
+//            edgesToOmit.add(SDGEdge.Kind.DATA_HEAP);
+            edgesToOmit.add(SDGEdge.Kind.DATA_ALIAS);
+            edgesToOmit.add(SDGEdge.Kind.DATA_LOOP);
+            edgesToOmit.add(SDGEdge.Kind.DATA_DEP_EXPR_VALUE);
+            edgesToOmit.add(SDGEdge.Kind.DATA_DEP_EXPR_REFERENCE);
+
+            System.out.println("Forward slice - edges ignored: ");
+            for(SDGEdge.Kind edge : edgesToOmit)  {
+                System.out.println(edge.name());
+            }
+            System.out.println();
+
+            forward = new SummarySlicerForward(sdg, edgesToOmit);
+
+        } else {
+            forward.setGraph(sdg);
+        }
 
     	if (backward == null) {
-    		backward = new SummarySlicerBackward(sdg);
+            Set<SDGEdge.Kind> edgesToOmit = new HashSet<>();
+            edgesToOmit.addAll(SDGEdge.Kind.threadEdges());
+            edgesToOmit.addAll(SDGEdge.Kind.controlFlowEdges());
+
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_UNCOND);
+//            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_COND); // Might need this dependence
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_EXPR);
+            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_CALL);
+            edgesToOmit.add(SDGEdge.Kind.JUMP_DEP);
+            edgesToOmit.add(SDGEdge.Kind.NTSCD);
+            edgesToOmit.add(SDGEdge.Kind.SYNCHRONIZATION);
+
+//        edgesToOmit.add(SDGEdge.Kind.DATA_DEP);
+//        edgesToOmit.add(SDGEdge.Kind.DATA_HEAP);
+            edgesToOmit.add(SDGEdge.Kind.DATA_ALIAS);
+            edgesToOmit.add(SDGEdge.Kind.DATA_LOOP);
+            edgesToOmit.add(SDGEdge.Kind.DATA_DEP_EXPR_VALUE);
+            edgesToOmit.add(SDGEdge.Kind.DATA_DEP_EXPR_REFERENCE);
+
+            System.out.println("Backward slice - edges ignored: ");
+            for(SDGEdge.Kind edge : edgesToOmit)  {
+                System.out.println(edge.name());
+            }
+            System.out.println();
+
+            backward = new SummarySlicerBackward(sdg, edgesToOmit);
 
     	} else {
     		backward.setGraph(sdg);

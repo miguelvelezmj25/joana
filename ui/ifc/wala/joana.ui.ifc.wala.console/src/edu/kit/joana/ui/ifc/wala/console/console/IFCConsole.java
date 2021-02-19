@@ -2623,6 +2623,35 @@ public class IFCConsole {
 			if (onlyDirectFlow) {
 				SDGProgram.throwAwayControlDeps(program.getSDG());
 			}
+
+			System.out.println("getCGConsumer: " + config.getCGConsumer());
+			System.out.println("getClassPath: " + config.getClassPath());
+			System.out.println(
+					"getClasspathAddEntriesFromMANIFEST: "
+							+ config.getClasspathAddEntriesFromMANIFEST());
+			System.out.println("getContextSelector: " + config.getContextSelector());
+			System.out.println(
+					"getControlDependenceVariant: " + config.getControlDependenceVariant());
+			System.out.println(
+					"getDefaultExceptionMethodState: " + config.getDefaultExceptionMethodState());
+			System.out.println(
+					"getDynamicDispatchHandling: " + config.getDynamicDispatchHandling());
+			System.out.println("getEntryMethod: " + config.getEntryMethod());
+			System.out.println("getExceptionAnalysis: " + config.getExceptionAnalysis());
+			System.out.println("getExclusions: " + config.getExclusions());
+			System.out.println("getFieldHelperOptions: " + config.getFieldHelperOptions());
+			System.out.println("getFieldPropagation: " + config.getFieldPropagation());
+			System.out.println("getIgnoreIndirectFlows: " + config.getIgnoreIndirectFlows());
+			System.out.println("getMethodFilter: " + config.getMethodFilter());
+			System.out.println("getMhpType: " + config.getMhpType());
+			System.out.println("getNotifier: " + config.getNotifier());
+			System.out.println("getPointsToPrecision: " + config.getPointsToPrecision());
+			System.out.println("getPruningPolicy: " + config.getPruningPolicy());
+			System.out.println(
+					"getSideEffectDetectorConfig: " + config.getSideEffectDetectorConfig());
+			System.out.println("getStubs: " + config.getStubs());
+			System.out.println("getSummaryComputationType: " + config.getSummaryComputationType());
+			System.out.println("getThirdPartyLibsPath: " + config.getThirdPartyLibsPath());
 			return Optional.of(program);
 		} catch (ClassHierarchyException e) {
 			out.error(e.getMessage());
@@ -2693,7 +2722,7 @@ public class IFCConsole {
 		MHPAnalysis mhp;
 
 		try {
-			sdg = SDG.readFrom(path, new SecurityNodeFactory());
+			sdg = SDG.readFromAndUseLessHeap(path, new SecurityNodeFactory());
 			mhp = mhpType.getMhpAnalysisConstructor().apply(sdg);
 			
 		} catch (IOException e) {

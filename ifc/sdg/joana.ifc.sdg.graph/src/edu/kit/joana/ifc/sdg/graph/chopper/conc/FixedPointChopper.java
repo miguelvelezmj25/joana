@@ -69,24 +69,24 @@ public class FixedPointChopper extends Chopper {
      * @return           The chop (a HashSet).
      */
     public Collection<SDGNode> chop(Collection<SDGNode> sourceSet, Collection<SDGNode> sinkSet) {
-    	// compute an initial chop
-    	Collection<SDGNode> backSlice = back.slice(sinkSet);
-    	Collection<SDGNode> chop = forw.subgraphSlice(sourceSet, backSlice);
+        // compute an initial chop
+        Collection<SDGNode> backSlice = back.slice(sinkSet);
+        Collection<SDGNode> chop = forw.subgraphSlice(sourceSet, backSlice);
 
-    	// search for a fixed point
-    	boolean changed = true;
+        // search for a fixed point
+        boolean changed = true;
 
-    	while (changed) {
-    		backSlice = back.subgraphSlice(sinkSet, chop);
-    		Collection<SDGNode> chopchop = forw.subgraphSlice(sourceSet, backSlice);
+        while (changed) {
+            backSlice = back.subgraphSlice(sinkSet, chop);
+            Collection<SDGNode> chopchop = forw.subgraphSlice(sourceSet, backSlice);
 
-    		if (chopchop.size() >= chop.size()) {
-    			changed = false;
-    		}
+            if (chopchop.size() >= chop.size()) {
+                changed = false;
+            }
 
-    		chop = chopchop;
-    	}
+            chop = chopchop;
+        }
 
-    	return chop;
+        return chop;
     }
 }

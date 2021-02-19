@@ -8,18 +8,10 @@
 package edu.kit.joana.ifc.sdg.graph.slicer;
 
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import edu.kit.joana.ifc.sdg.graph.SDG;
-import edu.kit.joana.ifc.sdg.graph.SDGEdge;
-import edu.kit.joana.ifc.sdg.graph.SDGNode;
+import com.ibm.wala.types.TypeReference;
+import edu.kit.joana.ifc.sdg.graph.*;
 import edu.kit.joana.util.Log;
 import edu.kit.joana.util.Logger;
 
@@ -79,6 +71,10 @@ public abstract class SummarySlicer implements Slicer {
             slice.put(v, phase1Predicate().phase1() ? v : null);
         }
 
+        Set<SDGEdge> edges = new LinkedHashSet<>();
+        Set<SDGEdge.Kind> unknownTypeEdges = new LinkedHashSet<>();
+        String unknownType = TypeReference.Unknown.getName().toString();
+
         while (!worklist.isEmpty()) {
 
             while (!worklist.isEmpty()) {
@@ -93,6 +89,50 @@ public abstract class SummarySlicer implements Slicer {
                     }
 
                     SDGNode v = reachedNode(e);
+
+                    // ==================== EDGES TO IGNORE FOR OPTION HOTSPOTS ======================
+                    if(e.getKind().equals(SDGEdge.Kind.CONTROL_DEP_COND) && !v.getKind().equals(SDGNode.Kind.PREDICATE)) {
+                        continue;
+                    }
+
+//                    if(e.getKind().equals(SDGEdge.Kind.DATA_HEAP) && (v.getType().equals(unknownType) || w.getType().equals(unknownType))){
+//                    if(e.getKind().equals(SDGEdge.Kind.DATA_HEAP) && v.getType().equals(unknownType) && w.getType().equals(unknownType)){
+
+                      // Still some weird dependences
+                    if(v.getType() != null && v.getType().equals(unknownType) && w.getType() != null && w.getType().equals(unknownType)) {
+//                        unknownTypeEdges.add(e.getKind());
+                        continue;
+                    }
+
+//                    if(v.getType() != null && v.getType().equals(unknownType)) {
+//                        unknownTypeEdges.add(e.getKind());
+//                        if(!e.getKind().equals(SDGEdge.Kind.DATA_HEAP)) {
+//                            continue;
+//                        }
+//                    }
+
+                      // Missing relevant dependences
+//                    if((v.getType() != null && v.getType().equals(unknownType)) || (w.getType() != null && w.getType().equals(unknownType))) {
+//                        unknownTypeEdges.add(e.getKind());
+//                        if(
+////                                e.getKind().equals(SDGEdge.Kind.DATA_HEAP)
+//                                e.getKind().equals(SDGEdge.Kind.PARAMETER_IN)
+//                        ) {
+//                            continue;
+//                        }
+//                    }
+
+//                    String source = v.getSourceLocation().getSourceFile();
+//                    if(source.startsWith("com/ibm") || source.startsWith("java")) {
+//                        continue;
+//                    }
+
+//                    System.out.println(e.getSource().getSourceLocation() + " - " + e.getKind() + " -> " + e.getTarget().getSourceLocation());
+
+//                    if(e.getKind().equals(SDGEdge.Kind.CONTROL_DEP_COND)) {
+                        edges.add(e);
+//                    }
+                    // ==================== EDGES TO IGNORE FOR OPTION HOTSPOTS ======================
 
                     if (!slice.containsKey(v) ||
                             (p.phase1() &&
@@ -122,6 +162,32 @@ public abstract class SummarySlicer implements Slicer {
             p =  phase2Predicate();
         }
 
+//        for(SDGEdge edge : edges) {
+//            System.out.println(edge);
+//        }
+
+        Set<SDGNode> keys = new HashSet<>();
+        for(SDGNode node : slice.keySet()) {
+            if(node == null) {
+                continue;
+            }
+            keys.add(node);
+        }
+        Set<SDGNode> values = new HashSet<>();
+        for(SDGNode node : slice.values()) {
+            if(node == null) {
+                continue;
+            }
+            values.add(node);
+        }
+
+        System.out.println("Keys: " + keys.size() + " - Values: " + values.size() + " - Same: " + keys.equals(values));
+
+        for(SDGEdge.Kind edgeKind : unknownTypeEdges) {
+            System.out.println(edgeKind);
+        }
+
+//        return slice.values();
         return slice.keySet();
     }
 
