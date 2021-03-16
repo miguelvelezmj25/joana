@@ -60,7 +60,7 @@ public class FixedPointChopper extends Chopper {
             edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_UNCOND);
 //            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_COND); // Might need this dependence
             edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_EXPR);
-            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_CALL);
+//            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_CALL);
             edgesToOmit.add(SDGEdge.Kind.JUMP_DEP);
             edgesToOmit.add(SDGEdge.Kind.NTSCD);
             edgesToOmit.add(SDGEdge.Kind.SYNCHRONIZATION);
@@ -91,7 +91,7 @@ public class FixedPointChopper extends Chopper {
 
             edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_UNCOND);
 //            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_COND); // Might need this dependence
-            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_EXPR);
+//            edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_EXPR);
             edgesToOmit.add(SDGEdge.Kind.CONTROL_DEP_CALL);
             edgesToOmit.add(SDGEdge.Kind.JUMP_DEP);
             edgesToOmit.add(SDGEdge.Kind.NTSCD);
